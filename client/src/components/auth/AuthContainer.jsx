@@ -4,6 +4,47 @@ import Signup from './Signup';
 
 export default function AuthContainer() {
   const [isLogin, setIsLogin] = useState(true);
+  const [authSuccess, setAuthSuccess] = useState(false);
+  const [userData, setUserData] = useState(null);
+
+  // Function to handle successful authentication
+  const handleAuthSuccess = (user) => {
+    setUserData(user);
+    setAuthSuccess(true);
+    
+    // Redirect to dashboard after 2 seconds
+    setTimeout(() => {
+      window.location.href = '/dashboard';
+    }, 2000);
+  };
+
+  if (authSuccess) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#f3f4f6',
+        padding: '20px'
+      }}>
+        <div style={{
+          backgroundColor: 'white',
+          padding: '32px',
+          borderRadius: '12px',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          textAlign: 'center'
+        }}>
+          <h2 style={{ color: '#2563eb', marginBottom: '16px' }}>
+            ✅ Welcome back, {userData.name}!
+          </h2>
+          <p style={{ color: '#6b7280' }}>
+            Redirecting to dashboard...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{
@@ -31,7 +72,10 @@ export default function AuthContainer() {
           </p>
         </div>
 
-        {isLogin ? <Login /> : <Signup />}
+        {isLogin ? 
+          <Login onSuccess={handleAuthSuccess} /> : 
+          <Signup onSuccess={handleAuthSuccess} />
+        }
 
         <div style={{ textAlign: 'center', marginTop: '24px' }}>
           <button 
